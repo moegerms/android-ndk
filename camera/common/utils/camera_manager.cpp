@@ -155,6 +155,10 @@ NativeCamera::NativeCamera(void) :
 
 void NativeCamera::CreateSession(ANativeWindow* outputWindow) {
   // Create output from this app's ANativeWindow, and add into output container
+  /// debugging...
+  LOGI("======Capture Session Width:  %d", ANativeWindow_getWidth(outputWindow));
+  LOGI("======Capture Session Height: %d", ANativeWindow_getHeight(outputWindow));
+  /// debugging ... end
   outputWindow_ = outputWindow;
   ANativeWindow_acquire(outputWindow_);
   CALL_CONTAINER(create(&outputContainer_));
@@ -281,7 +285,7 @@ rRect NativeCamera::GetCompatibleSize(rRect requestSize) {
 
     DisplaySize disp(requestSize.w, requestSize.h);
     bool bNeedFlip = false;
-    if (cameraOrientation_ == 90 || cameraOrientation_ == 270) {
+    if (requestSize.h > requestSize.w) {
         bNeedFlip = true;
     }
 
@@ -329,11 +333,13 @@ rRect NativeCamera::GetCompatibleSize(rRect requestSize) {
         foundSize.h = 640;
     }
 
-    if (bNeedFlip) {
+#if 0
+     if (bNeedFlip) {
       int tmp = foundSize.h;
       foundSize.h = foundSize.w;
       foundSize.w = tmp;
     }
+#endif
     return foundSize;
 }
 
